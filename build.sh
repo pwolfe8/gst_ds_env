@@ -18,12 +18,25 @@ if [ $# -eq "0" ]; then
     NOGPU=gpu
     GPU_ARG=nvidia
     WORKDIR=/opt/nvidia/deepstream/deepstream-6.0/
+    if [ $ARCH == x86_64 ]; then 
+      FROM_IMG=nvcr.io/nvidia/deepstream:6.0-devel
+    elif [ $ARCH == aarch64 ]; then
+      FROM_IMG=nvcr.io/nvidia/deepstream-l4t:6.0-samples
+    else
+      echo "unsupported architecture $ARCH. must be aarch64 or x86_64"
+      exit
+    fi
+
   else
     echo "nvidia-docker2 package not detected. not using GPU passthrough"
     NOGPU=_nogpu
     GPU_ARG=""
     WORKDIR=/root/gitfoldermap/
+    FROM_IMG=ubuntu:18.04
   fi
+
+  
+
   echo ""
 # otherwise set build arguments based on choice
 elif [ $ARCH_IN == jetson ]; then
@@ -31,21 +44,25 @@ elif [ $ARCH_IN == jetson ]; then
   NOGPU=gpu
   GPU_ARG=nvidia
   WORKDIR=/opt/nvidia/deepstream/deepstream-6.0/
+  FROM_IMG=nvcr.io/nvidia/deepstream-l4t:6.0-samples
 elif [ $ARCH_IN == desktop ]; then
   DOCKERFILE=x86_64
   NOGPU=gpu
   GPU_ARG=nvidia
   WORKDIR=/opt/nvidia/deepstream/deepstream-6.0/
+  FROM_IMG=nvcr.io/nvidia/deepstream:6.0-devel
 elif [ $ARCH_IN == jetson_nogpu ]; then
   ARCH=aarch64
   NOGPU=nogpu
   GPU_ARG=""
   WORKDIR=/root/gitfoldermap/
+  FROM_IMG=ubuntu:18.04
 elif [ $ARCH_IN == desktop_nogpu ]; then
   ARCH=x86_64
   NOGPU=nogpu
   GPU_ARG=""
   WORKDIR=/root/gitfoldermap/
+  FROM_IMG=ubuntu:18.04
 else
   echo ""
   echo "Unrecognized choice $ARCH_IN"
@@ -69,7 +86,7 @@ echo ARCH=$ARCH >> .env
 echo NOGPU=$NOGPU >> .env
 echo GPU_ARG=$GPU_ARG >> .env
 echo WORKDIR=$WORKDIR >> .env
-
+echo FROM_IMG=$FROM_IMG >> .env
 
 # build with build args set
 echo "building Dockerfile_${ARCH}${NOGPU} dockerfile..."

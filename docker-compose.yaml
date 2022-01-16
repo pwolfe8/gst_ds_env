@@ -7,7 +7,7 @@ services:
 
     #### name image  & container ####
     image: pwolfe854/${CONTAINER_NAME}:${ARCH}_${NOGPU}
-    container_name: ${CONTAINER_NAME}${ARCH}${NOGPU}
+    container_name: ${CONTAINER_NAME}
 
     #### command to keep container alive ####
     command: tail -F anything 
@@ -17,6 +17,7 @@ services:
       context: .
       dockerfile: Dockerfile_${ARCH}
       args:
+        FROM_IMG: ${FROM_IMG}
         ARCH: ${ARCH}
         GPU_ARG: ${GPU_ARG}
 
