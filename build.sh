@@ -34,9 +34,6 @@ if [ $# -eq "0" ]; then
     WORKDIR=/root/gitfoldermap/
     FROM_IMG=ubuntu:18.04
   fi
-
-  
-
   echo ""
 # otherwise set build arguments based on choice
 elif [ $ARCH_IN == jetson ]; then
@@ -89,5 +86,5 @@ echo WORKDIR=$WORKDIR >> .env
 echo FROM_IMG=$FROM_IMG >> .env
 
 # build with build args set
-echo "building Dockerfile_${ARCH}${NOGPU} dockerfile..."
+echo "building Dockerfile_${ARCH} ${NOGPU}..."
 docker-compose build $NOCACHE
