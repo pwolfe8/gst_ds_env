@@ -1,3 +1,11 @@
+#### My specific Gitignore ####
+
+# docker compose .env and .containername files built by build.sh
+.env
+.containername
+
+
+#### Python Gitignore ####
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
