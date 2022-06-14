@@ -83,3 +83,21 @@ RUN \
 #   useradd -m nvidia && echo "nvidia:nvidia" | chpasswd && adduser nvidia sudo
 # RUN mkdir -p /home/nvidia/.ssh && chown -R nvidia:nvidia /home/nvidia/.ssh 
 # USER nvidia
+
+# google protobufs installation for use with C++ and python 3.5 - 3.7
+ARG PROTOBUFVER=3.19.4
+# install protobuf compiler and C++
+RUN apt update && apt-get install -y autoconf automake libtool curl make g++ unzip && \
+    cd /root/ &&\
+    wget https://github.com/protocolbuffers/protobuf/releases/download/v3.19.4/protobuf-all-${PROTOBUFVER}.tar.gz && \
+    tar -xzf protobuf-all-${PROTOBUFVER}.tar.gz && \
+    cd protobuf-${PROTOBUFVER} && \
+    ./configure && \
+    make && \
+    make install && \
+    ldconfig && \
+    cd python && \
+    python3 setup.py build --cpp_implementation && \
+    python3 setup.py install --cpp_implementation && \
+    cd /root/ && rm protobuf-all-${PROTOBUFVER}.tar.gz && rm -rf protobuf-${PROTOBUFVER}
+
